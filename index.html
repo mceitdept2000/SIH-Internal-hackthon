@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Hackathon</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #090C15;
+            --card-bg: #121726;
+            --icon-bg: #1A2235;
+            --text-main: #ffffff;
+            --text-muted: #8b949e;
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #3b82f6;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --gradient-text: linear-gradient(to right, #818cf8, #c084fc, #60a5fa);
+            --gradient-btn: linear-gradient(to right, #6366f1, #2563eb);
+        }
+
+        /* Enable Smooth Scrolling and offset for sticky header */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 120px; 
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background Glows */
+        .ambient-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.4;
+        }
+        .glow-top-right {
+            top: -100px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            background: rgba(99, 102, 241, 0.2);
+        }
+        .glow-bottom-left {
+            bottom: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: rgba(139, 92, 246, 0.15);
+        }
+
+        /* Typography & Utilities */
+        .gradient-text {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-primary {
+            background: var(--gradient-btn);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        .btn-primary:hover {
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.6);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px; 
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(9, 12, 21, 0.9);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .logo span:first-child {
+            color: var(--primary);
+            font-family: monospace;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: white;
+        }
+        .nav-links a.active {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 4px;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 100px 0;
+            gap: 60px; 
+        }
+        .hero-content {
+            flex: 1;
+            max-width: 650px; 
+        }
+        .hero-subtitle {
+            color: #818cf8;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin-bottom: 32px;
+        }
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .hero-meta {
+            display: flex;
+            gap: 24px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .hero-meta div {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .hero-meta i {
+            color: #818cf8;
+        }
+
+        /* Illustration Mockup */
+        .hero-illustration {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end; 
+            position: relative;
+        }
+        .mockup-container {
+            width: 100%;
+            max-width: 550px; 
+            aspect-ratio: 1;
+            position: relative;
+        }
+        .mockup-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(99,102,241,0.1), transparent);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            transform: rotate(3deg);
+        }
+        .mockup-main {
+            position: absolute;
+            inset: 0;
+            background: #111623;
+            border-radius: 24px;
+            border: 1px solid rgba(99,102,241,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mockup-main i.fa-laptop-code {
+            font-size: 100px;
+            color: var(--primary);
+            filter: drop-shadow(0 0 20px rgba(99,102,241,0.5));
+        }
+        .floating-icon {
+            position: absolute;
+            background: var(--icon-bg);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .float-1 { top: 40px; left: 40px; color: #60a5fa; }
+        .float-2 { bottom: 60px; right: 40px; color: #c084fc; }
+        .float-3 { top: 120px; right: 30px; color: #818cf8; }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* FORCES 3 COLUMNS */
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px 32px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .stat-item {
+            text-align: center;
+            border-right: 1px solid var(--border-color);
+        }
+        .stat-item:last-child {
+            border-right: none;
+        }
+        .stat-item i {
+            font-size: 28px;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+        .stat-item h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .stat-item p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Cards and Sections Layout */
+        .content-section {
+            scroll-margin-top: 120px; 
+        }
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 48px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 24px;
+        }
+
+        /* About Section */
+        .about-text {
+            color: var(--text-muted);
+            margin-bottom: 48px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--icon-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .feature-item:nth-child(1) .feature-icon { color: #818cf8; }
+        .feature-item:nth-child(2) .feature-icon { color: #c084fc; }
+        .feature-item:nth-child(3) .feature-icon { color: #60a5fa; }
+        .feature-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .feature-item p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Timeline Section */
+        #timeline {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .timeline-container {
+            position: relative;
+            padding-left: 32px;
+            flex: 1;                        
+            display: flex;                  
+            flex-direction: column;         
+            justify-content: space-between; 
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 23px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, rgba(99,102,241,0.3), transparent);
+        }
+        .timeline-item {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .timeline-icon {
+            position: absolute;
+            left: -32px;
+            width: 48px;
+            height: 48px;
+            background: var(--icon-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateX(-50%);
+            z-index: 2;
+            color: var(--text-muted);
+        }
+        .timeline-item.active .timeline-icon {
+            border-color: rgba(99,102,241,0.5);
+            color: #818cf8;
+            box-shadow: 0 0 15px rgba(99,102,241,0.2);
+        }
+        .timeline-content {
+            flex: 1;
+            padding-left: 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .timeline-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+        .timeline-date {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .timeline-item.active .timeline-title,
+        .timeline-item.active .timeline-date {
+            color: #818cf8;
+        }
+
+        /* Rules List */
+        .rules-list {
+            list-style: none;
+        }
+        .rules-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 16px;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+        .rules-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 60px 0;
+            }
+            .hero-meta {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .hero-actions {
+                justify-content: center;
+            }
+            .hero-illustration {
+                justify-content: center;
+            }
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                gap: 20px;
+            }
+        }
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .hero h1 {
+                font-size: 3rem;
+            }
+            /* Stats Section Mobile Fix */
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .stat-item {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 24px;
+            }
+            .stat-item:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+            .features {
+                grid-template-columns: 1fr;
+            }
+            .timeline-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .card {
+                padding: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-glow glow-top-right"></div>
+    <div class="ambient-glow glow-bottom-left"></div>
+
+    <nav>
+        <div class="logo">
+            <span>&lt;/&gt;</span>
+            <span>INTERNAL HACKATHON</span>
+        </div>
+        
+        <!-- Updated Nav Links with Anchor Tags -->
+        <div class="nav-links">
+            <a href="#home" class="active">Home</a>
+            <a href="#about">About</a>
+            <a href="#timeline">Timeline</a>
+            <a href="#rules">Rules</a>
+            <a href="https://drive.google.com/file/d/1Wa1cLog30oq15kIhbyKKtPDJU_NJ257c/view?usp=drive_link">Problem Statements</a>
+        </div>
+        <a href="https://forms.gle/Tneb6S7oE1bFiBN86" class="btn-primary nav-btn">Register Now</a>
+    </nav>
+
+    <div class="container">
+        <main>
+            <!-- Hero Section (ID: home) -->
+            <section class="hero content-section" id="home">
+                <div class="hero-content">
+                    <div class="hero-subtitle">CODE. INNOVATE. IMPACT.</div>
+                    <h1>Internal <br><span class="gradient-text">Hackathon</span></h1>
+                    <p>Join brilliant minds from across the organization to solve real-world problems, build innovative solutions, and create impact.</p>
+                    
+                    <div class="hero-actions">
+                        <a href="https://forms.gle/Tneb6S7oE1bFiBN86" class="btn-primary">Register Now <i class="fas fa-arrow-right"></i></a>
+                        <a href="#about" class="btn-outline">Learn More</a>
+                    </div>
+                    
+                    <div class="hero-meta">
+                        <div><i class="far fa-calendar-alt"></i> 13 - 14 August, 2026</div>
+                        <div><i class="fas fa-map-marker-alt"></i> OFFLINE</div>
+                        <div><i class="fas fa-users"></i> Open to All Internal Teams</div>
+                    </div>
+                </div>
+                
+                <div class="hero-illustration">
+                    <div class="mockup-container">
+                        <div class="mockup-bg"></div>
+                        <div class="mockup-main">
+                            <i class="fas fa-laptop-code"></i>
+                            <div class="floating-icon float-1"><i class="far fa-lightbulb"></i></div>
+                            <div class="floating-icon float-2"><i class="fas fa-code"></i></div>
+                            <div class="floating-icon float-3"><i class="fas fa-cloud"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Section -->
+            <section class="stats">
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <h3>30+</h3>
+                    <p>Participants</p>
+                </div>
+                
+                <div class="stat-item">
+                    <i class="fas fa-code"></i>
+                    <h3>8+</h3>
+                    <p>Teams</p>
+                </div>
+                
+                <div class="stat-item">
+                    <i class="far fa-clock"></i>
+                    <h3>24</h3>
+                    <p>Hours</p>
+                </div>
+            </section>
+
+            <!-- Bottom Grid Layout -->
+            <section class="bottom-grid">
+                
+                <!-- About Card (ID: about) -->
+                <div class="card content-section" id="about">
+                    <h2>About the Hackathon</h2>
+                    <p class="about-text">Internal Hackathon is a 24-hour innovation marathon where developers, designers, and problem solvers come together to build solutions that matter. Collaborate, learn, and showcase your skills.</p>
+                    
+                    <div class="features">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-rocket"></i></div>
+                            <h4>Innovate</h4>
+                            <p>Build unique solutions to real-world problems.</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-user-friends"></i></div>
+                            <h4>Collaborate</h4>
+                            <p>Work with diverse minds and grow.</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-bullseye"></i></div>
+                            <h4>Impact</h4>
+                            <p>Create solutions that make a difference.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Card (ID: timeline) -->
+                <div class="card content-section" id="timeline">
+                    <h2>Timeline</h2>
+                    <div class="timeline-container">
+                        
+                        <div class="timeline-item active">
+                            <div class="timeline-icon"><i class="far fa-calendar-check"></i></div>
+                            <div class="timeline-content">
+                                <span class="timeline-title">Registrations Open</span>
+                                <span class="timeline-date">11 August, 2026|10.00AM</span>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-icon"><i class="fas fa-code"></i></div>
+                            <div class="timeline-content">
+                                <span class="timeline-title">Hackathon Starts</span>
+                                <span class="timeline-date">13 August, 2026 | 09:00 AM</span>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-icon"><i class="fas fa-trophy"></i></div>
+                            <div class="timeline-content">
+                                <span class="timeline-title">Final Presentations</span>
+                                <span class="timeline-date">14 August, 2026 | 03:00 PM</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Rules Section (ID: rules) added to handle the final nav link -->
+            <section class="card content-section" id="rules" style="margin-bottom: 80px;">
+                <h2>Rules & Guidelines</h2>
+                <ul class="rules-list">
+                    <li>Hackathon competition (IT & AIML) will be conducted on 14.8.26 between 9.30 and 3.00 in IT lab.</li>
+                    <li>Students are requested to prepare standee with their team name, team leader and member details.</li>
+                    <li> You are expected to show working model (demo). Live Stream will be there in youtube.</li>
+                    <li>Maximum 6 members per team with two girls minimum.</li>
+                    <li>Students are encouraged to form teams and actively participate in competition.</li>
+                    <li>My suggestion is team must be formed with final year, (third year & second year(AIML &IT)) students.</li>
+                </ul>
+            </section>
+
+        </main>
+    </div>
+    
+    <!-- Optional: Simple script to handle active state on nav links as you scroll -->
+<script>
+    const sections = document.querySelectorAll('.content-section');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    let activeSection = 'home';
+
+    function setActive(id) {
+        activeSection = id;
+
+        navLinks.forEach(link => {
+            link.classList.toggle(
+                'active',
+                link.getAttribute('href') === `#${id}`
+            );
+        });
+    }
+
+    // Navigation clicks
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            const href = link.getAttribute('href');
+
+            if (href && href.startsWith('#')) {
+                setActive(href.substring(1));
+            }
+        });
+    });
+
+    // Scroll handling
+    window.addEventListener('scroll', () => {
+        const scrollPosition = window.scrollY + 180;
+        const pageBottom =
+            window.innerHeight + window.scrollY;
+        const documentBottom =
+            document.documentElement.scrollHeight;
+
+        // Rules is the last section
+        if (pageBottom >= documentBottom - 10) {
+            setActive('rules');
+            return;
+        }
+
+        let candidate = null;
+        let candidateTop = -Infinity;
+
+        sections.forEach(section => {
+            const top = section.offsetTop;
+
+            if (
+                top <= scrollPosition &&
+                top > candidateTop
+            ) {
+                candidate = section;
+                candidateTop = top;
+            }
+        });
+
+        if (!candidate) return;
+
+        // About and Timeline have the same vertical position.
+        // Don't let the scroll handler overwrite whichever
+        // one the user explicitly clicked.
+        const activeElement = document.getElementById(activeSection);
+
+        if (
+            activeElement &&
+            activeElement.offsetTop === candidate.offsetTop
+        ) {
+            return;
+        }
+
+        setActive(candidate.id);
+    });
+
+    // Set initial state
+    setActive('home');
+</script>
+</body>
+</html>
